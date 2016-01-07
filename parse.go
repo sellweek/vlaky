@@ -16,6 +16,8 @@ var (
 	delayRegexp = regexp.MustCompile(`\d+`)
 )
 
+//TrainInfo contains both general info about a train as well as its current
+// position and delay, just as downloaded from ŽSR's webpage.
 type TrainInfo struct {
 	Category, Name string
 	Number         int
@@ -23,17 +25,24 @@ type TrainInfo struct {
 	From, To       Location
 }
 
+// Location specifies a position of a train at the given moment. It can represent schedules,
+// like in From and To fields of TrainInfo.
 type Location struct {
 	Station string
 	Time    time.Time
 }
 
+// Delay represents the curent position of the train.
 type Delay struct {
+	// Location contains the station from which the information was acquired
+	// and scheduled arrival at the station.
 	Location
-	Actually time.Time
-	Delay    int
+	Actually time.Time // The real arrival time at the station
+	Delay    int       // Delay, as calculated by ŽSR
 }
 
+// Parse downloads the information from ŽSR's webpage and parses it into a slice
+// of TrainInfo structs.
 func Parse() (locations []TrainInfo, err error) {
 	doc, err := goquery.NewDocument("http://tis.zsr.sk/elis/pohybvlaku?jazyk_stranky=sk")
 	if err != nil {
