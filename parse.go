@@ -1,7 +1,6 @@
-package vlak
+package main
 
 import (
-	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/net/html"
 	"regexp"
@@ -46,7 +45,7 @@ type Delay struct {
 func Parse() (locations []TrainInfo, err error) {
 	doc, err := goquery.NewDocument("http://tis.zsr.sk/elis/pohybvlaku?jazyk_stranky=sk")
 	if err != nil {
-		return err
+		return
 	}
 	delayHeaders := doc.Find(".accordionHeader")
 	delayTables := doc.Find(".trainDelayTable")
@@ -56,6 +55,7 @@ func Parse() (locations []TrainInfo, err error) {
 		parseHeader(element, &locations[i])
 		parseTable(delayTables.Get(i), &locations[i])
 	})
+	return
 }
 
 func parseHeader(element *goquery.Selection, info *TrainInfo) {
@@ -125,7 +125,7 @@ func parseTrainRoute(r string) (from, to Location) {
 func parseTime(str string) time.Time {
 	t, err := time.ParseInLocation("02.01. 15:04", str, time.UTC)
 	if err != nil {
-		fmt.Println(err)
+		//fmt.Println(err)
 		return time.Time{}
 	}
 	return t.AddDate(time.Now().Year(), 0, 0)
