@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/PuerkitoBio/goquery"
-	"golang.org/x/net/html"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
+	"golang.org/x/net/html"
 )
 
 var (
